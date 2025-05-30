@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -471,4 +472,69 @@
             let y = topPadding + 35; // เริ่มจากใต้ส่วนวันที่
             detailsLines.forEach((line) => {
                 ctx.fillText(line, leftPadding, y);
-                y += 
+                y +=
+});
+
+            // วาดส่วนสรุป
+            ctx.fillStyle = '#0a7e07';
+            y += sectionGap;
+            ctx.font = summaryFont;
+            summaryLines.forEach((line) => {
+                ctx.fillText(line, leftPadding, y);
+                y += summaryLineHeight;
+            });
+            const now = new Date();
+            const thaiDate = now.toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            const thaiTime = now.toLocaleTimeString('th-TH');
+            const dateTimeText = `อัปเดตล่าสุด: ${thaiDate} ${thaiTime} น.`;
+
+            // เพิ่มความสูงส่วนวันที่และเวลา
+            const dateTimeFont = '14px Arial';
+            ctx.font = dateTimeFont;
+            contentHeight += 30; // เพิ่มความสูงสำหรับบรรทัดวันที่
+
+            // ... โค้ดเดิมที่คำนวณความสูง ...
+
+            // วาดวันที่และเวลาด้านล่าง
+            ctx.fillStyle = '#666666';
+            ctx.font = dateTimeFont;
+            ctx.textAlign = 'right';
+            ctx.fillText(dateTimeText, baseWidth - leftPadding, totalHeight - 20);
+            ctx.textAlign = 'left'; // รีเซ็ตการจัดตำแหน่ง
+        }
+        // ฟังก์ชันคัดลอกรูปภาพไปยังคลิปบอร์ด
+        function saveImage() {
+            const canvas = document.getElementById('canvasOutput');
+            const dataURL = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `สรุปผล-${lastSelectedDate}.png`;
+            link.href = dataURL;
+            link.click();
+        }
+        setInterval(function() {
+            const now = new Date();
+            const dateTimeStr = `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH')}`;
+            document.getElementById('dateTime').innerText = dateTimeStr;
+        }, 1000);
+        // เพิ่มการอัปเดตวันที่เริ่มต้น
+        window.onload = function() {
+            const dateInput = document.getElementById('selectedDate');
+            const now = new Date();
+            
+            // แก้ไขเวลาตาม timezone ให้ถูกต้อง
+            const timezoneOffset = now.getTimezoneOffset() * 60000; // แปลงเป็นมิลลิวินาที
+            const localDate = new Date(now - timezoneOffset);
+            
+            const today = localDate.toISOString().split('T')[0];
+            dateInput.value = today;
+            lastSelectedDate = today;
+        };
+    </script>
+</body>
+</html> 
+
